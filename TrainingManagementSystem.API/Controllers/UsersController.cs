@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TrainingManagementSystem.API.Models;
 using TrainingManagementSystem.API.Repository_Interface;
 
 namespace TrainingManagementSystem.API.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Administrator")]
+   
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _repo;
@@ -28,14 +30,22 @@ namespace TrainingManagementSystem.API.Controllers
             if (user == null) return NotFound();
             return Ok(user);
         }
-
+       
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] User user)
         {
-            // In production: hash password before saving
-            var created = await _repo.Add(user);
-            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            try
+            {
+                var created = await _repo.Add(user);
+                return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            }
+            catch (Exception ex)
+            {
+                
+                return StatusCode(500, new { message = "Internal Server Error", detail = ex.Message });
+            }
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] User user)
@@ -43,6 +53,7 @@ namespace TrainingManagementSystem.API.Controllers
             if (id != user.Id) return BadRequest();
             return Ok(await _repo.Update(user));
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

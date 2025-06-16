@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TrainingManagementSystem.API.Data;
+using TrainingManagementSystem.API.DTOs;
 using TrainingManagementSystem.API.Models;
 using TrainingManagementSystem.API.Repositories;
 
@@ -39,6 +40,11 @@ namespace TrainingManagementSystem.API.Services
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public T Map<T>(CourseDTO dto)
+        {
+            throw new NotImplementedException();
         }
     }
 

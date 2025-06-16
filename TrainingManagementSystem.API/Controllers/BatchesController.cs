@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TrainingManagementSystem.API.DTOs;
 using TrainingManagementSystem.API.Models;
 using TrainingManagementSystem.API.Services;
 
@@ -36,33 +37,57 @@ namespace TrainingManagementSystem.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Batch batch)
+        public async Task<IActionResult> Create([FromBody] BatchDTO batchDto)
         {
-            var created = await _repo.Add(batch);
-            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            try
+            {
+                var newBatch = new Batch
+                {
+                    BatchName = batchDto.BatchName,
+                    StartDate = batchDto.StartDate,
+                    EndDate = batchDto.EndDate,
+                    CourseId = batchDto.CourseId
+                };
+
+                var created = await _repo.Add(newBatch);
+
+                return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Server error: {ex.Message}");
+            }
         }
 
 
+
         [HttpPut("{id}")]
-       public async Task<IActionResult> Update(int id, [FromBody] Batch batch)
-         {
-           if (id != batch.Id)
-            return BadRequest("ID mismatch");
+        public async Task<IActionResult> Update(int id, [FromBody] BatchDTO batchDto)
+        {
+            if (id != batchDto.Id)
+                return BadRequest("ID mismatch");
 
-          try
-    {
-        // Nullify navigation properties to avoid EF Core tracking issues
-        batch.Course = null;
-        batch.Enrolments = null;
+            try
+            {
+                var existingBatch = await _repo.GetById(id);
+                if (existingBatch == null)
+                    return NotFound();
 
-        var updated = await _repo.Update(batch);
-        return Ok(updated);
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(500, $"Server error: {ex.Message}");
-    }
-}
+                
+                existingBatch.BatchName = batchDto.BatchName;
+                existingBatch.StartDate = batchDto.StartDate;
+                existingBatch.EndDate = batchDto.EndDate;
+                existingBatch.CourseId = batchDto.CourseId;
+
+                var updated = await _repo.Update(existingBatch);
+                return Ok(updated);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Server error: {ex.Message}");
+            }
+        }
+
 
 
 

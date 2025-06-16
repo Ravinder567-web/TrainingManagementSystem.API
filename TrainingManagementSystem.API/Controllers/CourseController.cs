@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TrainingManagementSystem.API.DTOs;
 using TrainingManagementSystem.API.Models;
 using TrainingManagementSystem.API.Repositories;
 
@@ -10,17 +12,19 @@ namespace TrainingManagementSystem.API.Controllers
     public class CoursesController : ControllerBase
     {
         private readonly ICourseRepository _repo;
+        private readonly IMapper _mapper;
 
-        public CoursesController(ICourseRepository repo)
+        public CoursesController(ICourseRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllCourses() => Ok(await _repo.GetAll());
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCourse(int id)
+        public async Task<IActionResult> GetCourseById(int id)
         {
             var course = await _repo.GetById(id);
             if (course == null) return NotFound();
@@ -28,18 +32,44 @@ namespace TrainingManagementSystem.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCourse([FromBody] Course course)
+        public async Task<IActionResult> CreateCourse([FromBody] CourseDTO courseDto)
         {
-            var created = await _repo.Add(course);
-            return CreatedAtAction(nameof(GetCourse), new { id = created.Id }, created);
+            try
+            {
+                var course = _mapper.Map<Course>(courseDto);
+                var created = await _repo.Add(course);
+                var result = _mapper.Map<CourseDTO>(created);
+
+                return CreatedAtAction(nameof(GetCourseById), new { id = result.Id }, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Server error: {ex.Message}");
+            }
         }
 
+
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCourse(int id, [FromBody] Course course)
+        public async Task<IActionResult> UpdateCourse(int id, [FromBody] CourseDTO courseDto)
         {
-            if (id != course.Id) return BadRequest();
-            return Ok(await _repo.Update(course));
+            if (id != courseDto.Id)
+                return BadRequest("ID in URL and body must match.");
+
+            var existingCourse = await _repo.GetById(id);
+            if (existingCourse == null)
+                return NotFound();
+
+            
+            existingCourse.Title = courseDto.Title;
+            existingCourse.Description = courseDto.Description;
+
+            await _repo.Update(existingCourse);
+
+            return NoContent();
         }
+
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourse(int id)

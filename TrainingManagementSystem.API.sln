@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.36105.23 d17.13
+VisualStudioVersion = 17.13.36105.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainingManagementSystem.API", "TrainingManagementSystem.API\TrainingManagementSystem.API.csproj", "{6C0BB8BC-6C34-498E-B654-F751ED435AA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsumeWebAPI", "ConsumeWebAPI\ConsumeWebAPI.csproj", "{B8073DC7-1F68-4B94-9B4D-C4B3A72092BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{6C0BB8BC-6C34-498E-B654-F751ED435AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C0BB8BC-6C34-498E-B654-F751ED435AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C0BB8BC-6C34-498E-B654-F751ED435AA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8073DC7-1F68-4B94-9B4D-C4B3A72092BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8073DC7-1F68-4B94-9B4D-C4B3A72092BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8073DC7-1F68-4B94-9B4D-C4B3A72092BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8073DC7-1F68-4B94-9B4D-C4B3A72092BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

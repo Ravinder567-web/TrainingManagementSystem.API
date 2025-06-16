@@ -23,31 +23,16 @@ namespace TrainingManagementSystem.API.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDTO login)
         {
-            // Replace with real DB validation
+            
             if (login.Username == "admin" && login.Password == "2355377")
             {
-                var user = new User { Username = "admin", Role = "Administrator" };
+                var user = new User { Username = "Ravinder Amrudi", Role = "Trainer" };
                 var token = _authService.GenerateToken(user);
                 return Ok(new { Token = token });
             }
 
             return Unauthorized();
         }
-
-      /*  [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO login)
-        {
-            var user = await _userRepo.GetByUsername(login.Username);
-            if (user == null || user.PasswordHash != login.Password) // use hashed passwords in production
-                return Unauthorized();
-
-            var token = _authService.GenerateToken(user);
-            return Ok(new { Token = token, Role = user.Role });
-        }*/
-
-        // [Authorize(Roles = "Administrator")]
-        // [HttpGet("admin/dashboard")]
-        // public IActionResult AdminDashboard() => Ok("Welcome Admin!");
 
 
     }

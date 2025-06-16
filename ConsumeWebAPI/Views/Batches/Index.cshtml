@@ -1,0 +1,36 @@
+﻿@model List<ConsumeWebAPI.Models.Batch>
+
+<h2>Batch List</h2>
+
+<a asp-controller="Batches" asp-action="Create" class="btn btn-primary">Create New</a>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>CourseId</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var batch in Model)
+        {
+            <tr>
+                <td>@batch.BatchName</td>
+                <td>@batch.StartDate.ToShortDateString()</td>
+                <td>@batch.EndDate.ToShortDateString()</td>
+                <td>@batch.CourseId</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@batch.Id" class="btn btn-primary">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@batch.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Update" asp-route-id="@batch.Id" class="btn btn-secondary">Update</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

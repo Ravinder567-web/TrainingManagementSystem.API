@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using TrainingManagementSystem.API.Models;
 using TrainingManagementSystem.API.Repositories;
 
 namespace TrainingManagementSystem.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class EnrolmentsController : ControllerBase
     {
         private readonly IEnrolmentRepository _repo;
@@ -16,46 +15,56 @@ namespace TrainingManagementSystem.API.Controllers
             _repo = repo;
         }
 
-        // For all roles
+      
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var enrolments = await _repo.GetAll();
+            return Ok(enrolments);
+        }
+
+      
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var enrolment = await _repo.GetById(id);
-            if (enrolment == null) return NotFound();
+            if (enrolment == null)
+                return NotFound();
+
             return Ok(enrolment);
         }
 
-        // EMPLOYEE: Request enrolment
-        [Authorize(Roles = "Employee")]
-        [HttpPost("request")]
-        public async Task<IActionResult> RequestEnrolment([FromQuery] int userId, [FromQuery] int batchId)
+      
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Enrolment enrolment)
         {
-            var result = await _repo.RequestEnrolment(userId, batchId);
-            return Ok(result);
+            var created = await _repo.Create(enrolment);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
-        // MANAGER: Approve or Reject
-        [Authorize(Roles = "Manager")]
-        [HttpPut("review/{id}")]
-        public async Task<IActionResult> ReviewEnrolment(int id, [FromQuery] string status)
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Enrolment enrolment)
         {
-            var result = await _repo.ApproveOrReject(id, status);
-            if (result == null) return NotFound();
-            return Ok(result);
+            if (id != enrolment.Id)
+                return BadRequest();
+
+            var updated = await _repo.Update(enrolment);
+            if (updated == null)
+                return NotFound();
+
+            return Ok(updated);
         }
 
-        // ADMIN/MANAGER: View all enrolments
-        [Authorize(Roles = "Manager,Administrator")]
-        [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await _repo.GetAll());
-
-        // EMPLOYEE: View own enrolments
-        [Authorize(Roles = "Employee")]
-        [HttpGet("employee/{userId}")]
-        public async Task<IActionResult> GetByEmployee(int userId)
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            return Ok(await _repo.GetByUser(userId));
+            var deleted = await _repo.Delete(id);
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
         }
     }
-
 }

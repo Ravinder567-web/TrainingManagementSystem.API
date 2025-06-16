@@ -9,6 +9,6 @@
         public int UserId { get; set; }
         public User User { get; set; }
 
-        public string Status { get; set; } // Requested, Approved, Rejected
+        public string Status { get; set; } 
     }
 }

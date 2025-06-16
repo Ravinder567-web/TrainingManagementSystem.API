@@ -16,7 +16,7 @@ namespace TrainingManagementSystem.API.Repositories
 
         public async Task<IEnumerable<Batch>> GetAll()
         {
-            return await _context.Batches.ToListAsync(); // REMOVE Include() to isolate error
+            return await _context.Batches.ToListAsync(); 
         }
 
         public async Task<Batch> GetById(int id)
@@ -38,10 +38,11 @@ namespace TrainingManagementSystem.API.Repositories
 
         public async Task<Batch> Update(Batch batch)
         {
-            _context.Entry(batch).State = EntityState.Modified;
+            _context.Batches.Update(batch);
             await _context.SaveChangesAsync();
             return batch;
         }
+
 
 
         public async Task<bool> Delete(int id)

@@ -1,4 +1,5 @@
-﻿using TrainingManagementSystem.API.Models;
+﻿using TrainingManagementSystem.API.DTOs;
+using TrainingManagementSystem.API.Models;
 
 namespace TrainingManagementSystem.API.Repositories
 {
@@ -9,5 +10,6 @@ namespace TrainingManagementSystem.API.Repositories
         Task<Course> Add(Course course);
         Task<Course> Update(Course course);
         Task<bool> Delete(int id);
+        T Map<T>(CourseDTO dto);
     }
 }
