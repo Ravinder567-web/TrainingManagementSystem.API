@@ -1,6 +1,7 @@
 ﻿using ConsumeWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
+
 public class EnrolmentsController : Controller
 {
     private readonly EnrolmentService _enrolmentService;
@@ -31,6 +32,7 @@ public class EnrolmentsController : Controller
         }
         return View(enrolment);
     }
+
 
     public async Task<IActionResult> Edit(int id)
     {

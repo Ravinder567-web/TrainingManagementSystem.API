@@ -20,9 +20,8 @@ public class BatchesController : Controller
     {
         var batch = await _batchService.GetBatchByIdAsync(id);
         if (batch == null) return NotFound();
-        return View(batch);  
+        return View(batch);
     }
-
     [HttpPost]
     public async Task<IActionResult> Edit(Batch batch)
     {
@@ -33,6 +32,27 @@ public class BatchesController : Controller
                 return RedirectToAction("Index");
         }
         return View(batch);
+    }
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Batch batch)
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await _batchService.AddBatchAsync(batch);
+            if (result)
+                return RedirectToAction("Index");
+        }
+        return View(batch);
+    }
+
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
     }
 
     public async Task<IActionResult> Delete(int id)

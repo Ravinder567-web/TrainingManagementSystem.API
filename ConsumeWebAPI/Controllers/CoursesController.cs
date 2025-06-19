@@ -16,6 +16,7 @@ public class CoursesController : Controller
         return View(courses);
     }
 
+    [HttpGet]
     public IActionResult Create()
     {
         return View();
@@ -31,6 +32,7 @@ public class CoursesController : Controller
         }
         return View(course);
     }
+
 
     public async Task<IActionResult> Edit(int id)
     {

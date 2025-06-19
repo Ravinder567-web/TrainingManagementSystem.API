@@ -23,6 +23,11 @@ public class BatchService
         return null;
     }
 
+    public async Task<bool> AddBatchAsync(Batch batch)
+    {
+        var response = await _httpClient.PostAsJsonAsync("https://localhost:44391/api/batches", batch);
+        return response.IsSuccessStatusCode;
+    }
     public async Task<bool> CreateBatchAsync(Batch batch)
     {
         var response = await _httpClient.PostAsJsonAsync("https://localhost:44391/api/batches", batch);
@@ -40,4 +45,6 @@ public class BatchService
         var response = await _httpClient.DeleteAsync($"https://localhost:44391/api/batches/{id}");
         return response.IsSuccessStatusCode;
     }
+
+    
 }
